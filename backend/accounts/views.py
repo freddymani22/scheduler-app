@@ -13,10 +13,14 @@ from .models import CustomUser
 import random
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 CustomUser = get_user_model()
 
@@ -29,11 +33,9 @@ def generate_otp_view(request):
     if not email:
         return Response({'detail': 'Please provide an email'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Check if the user with the provided email exists
     try:
         user = CustomUser.objects.get(email=email)
     except CustomUser.DoesNotExist:
-        print('fff')
         return Response({'detail': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
     # Generate a new OTP
@@ -83,3 +85,11 @@ def login_view(request):
 
     elif request.method == 'GET':
         return Response({'message': 'This is a GET request'})
+
+
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def home_view(request):
+    if request.method == 'GET':
+        return Response({"message": "Hello!"})

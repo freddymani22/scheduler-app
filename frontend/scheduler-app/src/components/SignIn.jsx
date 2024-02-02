@@ -1,24 +1,29 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function SignIn() {
+function SignIn({ setIsAuthenticated }) {
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
     const [isOtpGenerated, setIsOtpGenerated] = useState(false);
+    const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+    const navigate = useNavigate();
+
 
     async function handleGenerateOtp() {
 
 
-        const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
 
         try {
             // Make an API call to send the email
             const response = await axios.post(`${BASE_URL}/generate-otp/`, { email });
-            console.log(response, email)
+
 
             // Check if the email was successfully sent before setting isOtpGenerated to true
             if (response.request.statusText === 'OK') {
                 setIsOtpGenerated(true);
+
             } else {
                 // Handle the case where the email sending failed
                 console.error("Failed to send email");
@@ -29,9 +34,31 @@ function SignIn() {
 
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        // Add logic to handle form submission (validate OTP, sign in, etc.)
+
+        try {
+            const response = await axios.post(`${BASE_URL}/login/`, {
+                email,
+                otp,
+            });
+
+
+            const jwtToken = response.data.access_token;
+
+            localStorage.setItem('jwtToken', jwtToken);
+
+
+
+            // setEmail('');
+            // setOtp('');
+            await setIsAuthenticated(true)
+            navigate('/')
+
+
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
     }
 
     return (
@@ -64,16 +91,18 @@ function SignIn() {
                             required
                             onChange={(e) => setOtp(e.target.value)}
                         />
+                        <button type="submit">Sign In</button>
+
+
                     </>
                 )}
 
-                {isOtpGenerated && (
-                    <>
-                        <button type="submit">Sign In</button>
-                        <button onClick={handleGenerateOtp}>resend otp</button>
-                    </>
-                )}
             </form>
+
+            {isOtpGenerated && (
+                <button onClick={() => setIsOtpGenerated((val) => !val)}>resend otp</button>
+
+            )}
         </div>
     );
 }

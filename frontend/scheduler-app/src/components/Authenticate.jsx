@@ -5,11 +5,11 @@ import SignUp from './SignUp'
 
 
 
-function Authenticate() {
+function Authenticate({ setIsAuthenticated }) {
     return (
         <div>
             {/* <SignUp /> */}
-            <SignIn />
+            <SignIn setIsAuthenticated={setIsAuthenticated} />
 
         </div>
     )
