@@ -21,7 +21,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, user_type=user_type, **extra_fields)
 
     def generate_otp(self):
-        # Generate a random 4-digit OTP
+
         return str(random.randint(1000, 9999))
 
 
@@ -46,7 +46,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return ''.join([str(random.randint(0, 9)) for _ in range(4)])
 
     def verify_otp(self, provided_otp):
-        # Verify the provided OTP against the stored OTP for the user
+
         return self.otp == provided_otp
 
     def save(self, *args, **kwargs):

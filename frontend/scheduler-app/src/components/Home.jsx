@@ -4,11 +4,21 @@ import SideBar from "./SideBar"
 
 import styles from './Home.module.css'
 
-function Home() {
+import { DateProvider } from './DateContext'
+
+function Home({ userData, setUserData }) {
+
+
+
+
+
     return (
         <div className={styles.home}>
-            <SideBar />
-            <MyCalendar />
+            <DateProvider>
+
+                <SideBar userData={userData} setUserData={setUserData} />
+                <MyCalendar />
+            </DateProvider>
 
         </div>
     )

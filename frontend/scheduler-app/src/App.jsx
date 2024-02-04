@@ -10,6 +10,7 @@ import axios from "axios";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [userData, setUserData] = useState({});
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -23,7 +24,7 @@ function App() {
       let response;
       try {
         response = await axios.get(
-          `${BASE_URL}/home`,
+          `${BASE_URL}/candidate/details/`,
           {
             headers,
           }
@@ -31,14 +32,16 @@ function App() {
         if (response.status === 200) {
 
           setIsAuthenticated(true);
+          setUserData(response.data)
         }
       } catch (error) {
+        console.log(error)
       } finally {
         setIsLoading(false);
       }
     }
     fetchData();
-  }, [, isAuthenticated, , setIsAuthenticated, setIsLoading]);
+  }, [isAuthenticated, setIsAuthenticated, BASE_URL, setIsLoading]);
 
 
   if (isLoading)
@@ -47,7 +50,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<ProtectedRoute isAuthenticated={isAuthenticated}><Home /></ProtectedRoute>} />
+        <Route path='/' element={<ProtectedRoute isAuthenticated={isAuthenticated}><Home userData={userData} setUserData={setUserData} /></ProtectedRoute>} />
         <Route path="/login" element={<Authenticate setIsAuthenticated={setIsAuthenticated} />} />
 
       </Routes>

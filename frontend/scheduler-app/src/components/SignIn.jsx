@@ -17,7 +17,7 @@ function SignIn({ setIsAuthenticated }) {
 
         try {
             // Make an API call to send the email
-            const response = await axios.post(`${BASE_URL}/generate-otp/`, { email });
+            const response = await axios.post(`${BASE_URL}/accounts/generate-otp/`, { email });
 
 
             // Check if the email was successfully sent before setting isOtpGenerated to true
@@ -38,7 +38,7 @@ function SignIn({ setIsAuthenticated }) {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`${BASE_URL}/login/`, {
+            const response = await axios.post(`${BASE_URL}/accounts/login/`, {
                 email,
                 otp,
             });

@@ -1,16 +1,21 @@
 from django.db import models
-
+from django.utils import timezone
 # Create your models here.
 
 from accounts.models import CustomUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class CandidateAvailability(models.Model):
     candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)
-    date_time = models.DateTimeField()
+    interview_title = models.CharField(
+        max_length=100, default='Available', blank=True)
+    available_from = models.DateTimeField(default=timezone.now)
+    available_to = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.candidate.first_name} {self.date_time}"
+        return f"{self.candidate.first_name} {self.available_from}"
 
 
 class Candidate(models.Model):
@@ -21,4 +26,11 @@ class Candidate(models.Model):
     skills = models.TextField(null=True, blank=True)
 
     def __str__(self):
+        print(self.user)
         return f"{self.first_name} {self.last_name}"
+
+
+@receiver(post_save, sender=CustomUser)
+def create_candidate_instance(sender, instance, created, **kwargs):
+    if created and instance.user_type == 'candidate':
+        Candidate.objects.create(user=instance)

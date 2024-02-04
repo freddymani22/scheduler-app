@@ -1,5 +1,6 @@
 .home {
   display: flex;
+  position: relative;
 }
 
 .sideBar {

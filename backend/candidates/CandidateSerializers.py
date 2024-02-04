@@ -3,18 +3,35 @@ from .models import Candidate, CandidateAvailability
 
 
 class CandidateAvailabilitySerializer(serializers.ModelSerializer):
+
+    title = serializers.CharField(source='interview_title', required=False)
+    start = serializers.DateTimeField(source='available_from')
+    end = serializers.DateTimeField(source='available_to')
+
     class Meta:
         model = CandidateAvailability
-        fields = '__all__'
+        fields = ['title', 'start', 'end']
+
+    def create(self, validated_data):
+
+        candidate_instance = Candidate.objects.get(
+            user__email=self.context['request'].user)
+
+        validated_data['candidate'] = candidate_instance
+
+        candidate_availability = CandidateAvailability.objects.create(
+            **validated_data)
+
+        return candidate_availability
 
 
 class CandidateSerializer(serializers.ModelSerializer):
-    availabilities = CandidateAvailabilitySerializer(many=True, read_only=True)
+    # availabilities = CandidateAvailabilitySerializer(many=True, read_only=True)
 
     class Meta:
         model = Candidate
         fields = ['first_name',
-                  'last_name', 'skills', 'availabilities']
+                  'last_name', 'skills']
 
     def create(self, validated_data):
         # Automatically set the 'user' field to the authenticated user
