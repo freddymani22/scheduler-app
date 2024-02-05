@@ -29,14 +29,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USER_TYPES = (
         ('candidate', 'Candidate'),
         ('interviewer', 'Interviewer'),
-        ('interviewadmin', 'InterviewAdmin'),
+        ('', 'Empty'),
     )
 
     email = models.EmailField(unique=True)
     otp = models.CharField(max_length=6, null=True, blank=True)
-    user_type = models.CharField(max_length=20, choices=USER_TYPES, null=True)
+    user_type = models.CharField(
+        max_length=20, choices=USER_TYPES, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_interview_admin = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 

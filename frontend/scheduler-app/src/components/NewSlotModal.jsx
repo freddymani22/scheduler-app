@@ -4,13 +4,16 @@ import { useDate } from './DateContext';
 
 
 function NewSlotModal({ isModalOpen, setIsModalOpen }) {
-    const { setSelectedDate, setFromTime, setToTime, selectedDate, toTime, handleFormSubmit } = useDate();
+    const { setSelectedDate, setFromTime, setToTime, selectedDate, toTime, fromTime, handleFormSubmit } = useDate();
+
+
 
 
     const initialDate = selectedDate ? new Date(selectedDate) : new Date();
 
 
-    console.log(initialDate.setHours(initialDate.getHours() + 5, initialDate.getMinutes() + 30));
+
+    initialDate.setHours(initialDate.getHours() + 5, initialDate.getMinutes() + 30);
 
 
 
@@ -20,6 +23,26 @@ function NewSlotModal({ isModalOpen, setIsModalOpen }) {
 
         setIsModalOpen(false)
     }
+
+
+    async function handleDateSelect(e) {
+        await setSelectedDate(e.target.valueAsDate)
+    }
+
+
+    async function handleFromTime(e) {
+
+        await setFromTime(e.target.value)
+    }
+
+
+
+    async function handleToTime(e) {
+        await setToTime(e.target.value)
+    }
+
+
+
 
 
 
@@ -33,15 +56,15 @@ function NewSlotModal({ isModalOpen, setIsModalOpen }) {
                     &times;
                 </button>
 
-                <form className={styles.modelForm} onSubmit={(e) => { handleFormSubmit(e) }}>
+                <form className={styles.modelForm} onSubmit={(e) => { handleFormSubmit(e); setIsModalOpen(false); }}>
                     <label>Date:</label>
-                    <input type="date" value={selectedDate.toISOString().split('T')[0]} onChange={(e) => setSelectedDate(e.target.valueAsDate)} required />
+                    <input type="date" value={initialDate.toISOString().split('T')[0]} onChange={e => handleDateSelect(e)} required />
 
                     <label>From:</label>
-                    <input type="time" value={initialDate.toISOString().slice(11, 16)} onChange={(e) => setFromTime(e.target.value)} required />
+                    <input type="time" value={fromTime} onChange={(e) => handleFromTime(e)} required />
 
                     <label>To:</label>
-                    <input type="time" value={toTime} onChange={(e) => setToTime(e.target.value)} required />
+                    <input type="time" value={toTime} onChange={(e) => handleToTime(e)} required />
 
                     <button type="submit" className={styles.modelFormBtn}>
                         Update

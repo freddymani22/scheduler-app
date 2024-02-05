@@ -23,9 +23,10 @@ function CalendarModal({ isModalOpen, setIsModalOpen, selectedEvent }) {
     }
 
 
-    function updateEventDetails() {
+    function updateEventDetails(e) {
 
-
+        e.preventDefault()
+        setIsModalOpen(false)
     }
 
 
@@ -36,7 +37,7 @@ function CalendarModal({ isModalOpen, setIsModalOpen, selectedEvent }) {
                 <button className={styles.modalClose} onClick={handleModelClose}>
                     &times;
                 </button>
-                {selectedEvent.title === 'Available' ? (
+                {selectedEvent.title == 'Available' ? (
                     <form className={styles.modelForm} onSubmit={(e) => { updateEventDetails(e) }}>
                         <label>Date:</label>
                         <input type="date" value={selectedDate.toISOString().split('T')[0]} onChange={(e) => setSelectedDate(e.target.valueAsDate)} />

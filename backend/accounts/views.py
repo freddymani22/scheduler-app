@@ -78,8 +78,9 @@ def login_view(request):
             # Generate access token
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
+            is_interview_admin = user.is_interview_admin
 
-            return Response({'access_token': access_token, 'detail': 'Successfully logged in'})
+            return Response({'access_token': access_token, 'detail': 'Successfully logged in', 'is_interview_admin': is_interview_admin})
         else:
             return Response({'detail': 'Invalid email or OTP'}, status=status.HTTP_400_BAD_REQUEST)
 

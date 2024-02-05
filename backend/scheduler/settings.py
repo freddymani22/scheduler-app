@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "accounts",
     "interviewers",
     "candidates",
+    "admin_panels",
 
 
     # "THIRD PARTY"

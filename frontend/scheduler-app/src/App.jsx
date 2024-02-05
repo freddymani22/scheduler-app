@@ -1,14 +1,21 @@
+import axios from "axios";
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+
+
+import ProtectedRoute from "./components/ProtectedRoute";
 import Authenticate from "./components/Authenticate";
 import Home from "./components/Home";
-import { useEffect, useState } from "react";
-import ProtectedRoute from "./components/ProtectedRoute";
-import axios from "axios";
+import AdminPanel from "./components/AdminPanel";
+
 
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isInterivewAdmin, setIsInterivewAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true)
   const [userData, setUserData] = useState({});
 
@@ -33,6 +40,7 @@ function App() {
 
           setIsAuthenticated(true);
           setUserData(response.data)
+          setIsInterivewAdmin(response.data.is_interview_admin)
         }
       } catch (error) {
         console.log(error)
@@ -50,11 +58,38 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<ProtectedRoute isAuthenticated={isAuthenticated}><Home userData={userData} setUserData={setUserData} /></ProtectedRoute>} />
-        <Route path="/login" element={<Authenticate setIsAuthenticated={setIsAuthenticated} />} />
-
+        <Route
+          path="/"
+          element={
+            isInterivewAdmin ? (
+              <Navigate to="/admin" replace={true} />
+            ) : (
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Home userData={userData} setUserData={setUserData} />
+              </ProtectedRoute>
+            )
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            // <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <AdminPanel />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <Authenticate
+              setIsAuthenticated={setIsAuthenticated}
+              setIsInterivewAdmin={setIsInterivewAdmin}
+              isInterivewAdmin={isInterivewAdmin}
+            />
+          }
+        />
       </Routes>
-    </Router>
+    </Router >
   );
 }
 

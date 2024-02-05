@@ -27,11 +27,13 @@ class CandidateAvailabilitySerializer(serializers.ModelSerializer):
 
 class CandidateSerializer(serializers.ModelSerializer):
     # availabilities = CandidateAvailabilitySerializer(many=True, read_only=True)
+    is_interview_admin = serializers.ReadOnlyField(
+        source='user.is_interview_admin')
 
     class Meta:
         model = Candidate
         fields = ['first_name',
-                  'last_name', 'skills']
+                  'last_name', 'skills', 'is_interview_admin']
 
     def create(self, validated_data):
         # Automatically set the 'user' field to the authenticated user

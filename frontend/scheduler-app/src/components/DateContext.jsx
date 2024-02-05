@@ -12,6 +12,8 @@ function DateProvider({ children }) {
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [fromTime, setFromTime] = useState('');
+
+
     const [toTime, setToTime] = useState('');
     const [events, setEvents] = useState([]);
 
@@ -41,9 +43,18 @@ function DateProvider({ children }) {
             start: fromDateTime.toISOString(),
             end: toDateTime.toISOString(),
         };
-        setEvents(prevEvents => [...prevEvents, { title: "Available", ...data }]);
 
+        setEvents(prevEvents => [
+            ...prevEvents,
+            {
+                title: "Available",
+                start: new Date(data.start),
+                end: new Date(data.end),
+            },
+        ]);
 
+        setFromTime('')
+        setToTime('')
         const token = localStorage.getItem("jwtToken");
         const headers = {
             Authorization: `Bearer ${token}`,

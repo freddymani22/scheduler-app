@@ -5,11 +5,11 @@ import SignUp from './SignUp'
 
 
 
-function Authenticate({ setIsAuthenticated }) {
+function Authenticate({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
     return (
         <div>
             {/* <SignUp /> */}
-            <SignIn setIsAuthenticated={setIsAuthenticated} />
+            <SignIn setIsAuthenticated={setIsAuthenticated} setIsInterivewAdmin={setIsInterivewAdmin} isInterivewAdmin={isInterivewAdmin} />
 
         </div>
     )

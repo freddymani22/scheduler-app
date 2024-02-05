@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styles from './MyCalender.module.css';
 
 
-import axios from 'axios';
+
 import { useDate } from './DateContext';
 import CalendarModal from './CalendarModal'
 import NewSlotModal from './NewSlotModal';
@@ -25,7 +25,7 @@ const MyCalendar = () => {
     const localizer = momentLocalizer(moment);
 
 
-    const handleSlotSelect = ({ start, end, slots }) => {
+    const handleSlotSelect = ({ start }) => {
 
 
         setSelectedDate(start)
@@ -36,9 +36,9 @@ const MyCalendar = () => {
 
 
     function handleSelectEvent(e) {
-        setSelectedDate(e)
+        setSelectEvent(e)
         setIsModalOpen(true)
-        console.log(e)
+
 
     }
     return (

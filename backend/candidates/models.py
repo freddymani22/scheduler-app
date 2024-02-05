@@ -15,7 +15,7 @@ class CandidateAvailability(models.Model):
     available_to = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.candidate.first_name} {self.available_from}"
+        return f"{self.candidate.user.email} {self.available_from}"
 
 
 class Candidate(models.Model):
@@ -26,11 +26,13 @@ class Candidate(models.Model):
     skills = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        print(self.user)
-        return f"{self.first_name} {self.last_name}"
+
+        return f"{self.user.email}"
 
 
 @receiver(post_save, sender=CustomUser)
-def create_candidate_instance(sender, instance, created, **kwargs):
-    if created and instance.user_type == 'candidate':
+def create_candidate(sender, instance, created, **kwargs):
+
+    if created:
+        print('check reciver')
         Candidate.objects.create(user=instance)

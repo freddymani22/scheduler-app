@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function SignIn({ setIsAuthenticated }) {
+function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
     const [isOtpGenerated, setIsOtpGenerated] = useState(false);
@@ -53,7 +53,14 @@ function SignIn({ setIsAuthenticated }) {
             // setEmail('');
             // setOtp('');
             await setIsAuthenticated(true)
-            navigate('/')
+
+            await (setIsInterivewAdmin(response.data.is_interview_admin))
+            if (isInterivewAdmin) {
+                navigate('/admin');
+            } else {
+                navigate('/');
+            }
+
 
 
         } catch (error) {

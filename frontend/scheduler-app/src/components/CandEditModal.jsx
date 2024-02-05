@@ -31,7 +31,8 @@ function CandEditModal({ editModal, setEditModal, userData, setUserData }) {
 
             await Axios.put(`${BASE_URL}/candidate/details/`, updatedData, { headers });
 
-            setUserData({ firstName, lastName, skills })
+            setUserData({ first_name: firstName, last_name: lastName, skills: skills });
+
             handleModelClose();
         } catch (error) {
 
@@ -42,7 +43,7 @@ function CandEditModal({ editModal, setEditModal, userData, setUserData }) {
     return (
         <>
             <div className={`${styles.modal} ${editModal ? '' : styles.hidden}`}>
-                <p className={styles.title}>UPDATE DETAILS</p>
+                <p className={styles.title}>UPDATE PROFILE</p>
                 <button className={styles.modalClose} onClick={handleModelClose}>
                     &times;
                 </button>
