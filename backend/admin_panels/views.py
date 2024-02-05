@@ -1,12 +1,12 @@
-
-
-from .admin_serializers import CandidateAvailabilitySerializer
-from candidates.models import CandidateAvailability
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
+
+from .admin_serializers import CandidateAvailabilitySerializer
+from candidates.models import CandidateAvailability
 
 
 class InterviewAdminPermission(permissions.BasePermission):
@@ -59,16 +59,58 @@ def filter_candidates_by_availability(request):
         available_to__gte=available_to_datetime
     )
 
-    # Extract candidate emails and user emails
-    candidate_emails = list(candidate_availability_objects.values_list(
-        'candidate__user__email', flat=True))
-    user_emails = list(candidate_availability_objects.values_list(
-        'candidate__user', flat=True))
+    candidates = []
+    interviewers = []
 
-    # Include current user and user's email in the response
-    current_user_email = request.user.email if request.user.is_authenticated else None
+    for candidate_availability in candidate_availability_objects:
+        user_email = candidate_availability.candidate.user.email
+        user_type = candidate_availability.candidate.user.user_type
 
-    candidates_info = [{'id': candidate.id, 'email': candidate.candidate.user.email}
-                       for candidate in candidate_availability_objects]
+    # Check user type and organize accordingly
+        if user_type == 'candidate':
+            candidates.append(
+                {'id': candidate_availability.id, 'email': user_email})
+        elif user_type == 'interviewer':
+            interviewers.append(
+                {'id': candidate_availability.id, 'email': user_email})
 
-    return Response({'candidates': candidates_info})
+# Create the final response
+    response_data = {
+        'candidates': candidates,
+        'interviewers': interviewers,
+
+    }
+
+    return Response(response_data)
+
+
+@api_view(['POST'])
+def update_availability(request):
+    # Extract data from the request
+    candidate_availability_id_candidate = request.data.get(
+        'candidate_availability_id')
+    candidate_availability_id_interviewer = request.data.get(
+        'interviewer_availability_id')
+    interview_title = request.data.get('interview_title')
+    print(candidate_availability_id_candidate,
+          candidate_availability_id_interviewer, interview_title)
+
+    # Check if all required data is provided
+    if not (candidate_availability_id_candidate and candidate_availability_id_interviewer and interview_title):
+        return Response({'error': 'Incomplete data provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Get the CandidateAvailability instances
+    candidate_availability_candidate = get_object_or_404(
+        CandidateAvailability, pk=candidate_availability_id_candidate, candidate__user__user_type='candidate')
+    candidate_availability_interviewer = get_object_or_404(
+        CandidateAvailability, pk=candidate_availability_id_interviewer, candidate__user__user_type='interviewer')
+
+    # Update the interview titles
+    candidate_availability_candidate.interview_title = interview_title
+    candidate_availability_interviewer.interview_title = interview_title
+
+    # Save the changes
+    candidate_availability_candidate.save()
+    candidate_availability_interviewer.save()
+
+    return Response({'message': 'Interview titles updated successfully'}, status=status.HTTP_200_OK)

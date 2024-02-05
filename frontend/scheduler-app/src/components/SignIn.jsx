@@ -1,13 +1,19 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
 function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const [isOtpGenerated, setIsOtpGenerated] = useState(false);
+
     const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+
     const navigate = useNavigate();
+
 
 
     async function handleGenerateOtp() {
@@ -17,6 +23,7 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
 
         try {
             // Make an API call to send the email
+            setIsLoading(true)
             const response = await axios.post(`${BASE_URL}/accounts/generate-otp/`, { email });
 
 
@@ -30,6 +37,8 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
             }
         } catch (error) {
             console.error("Error sending email", error);
+        } finally {
+            setIsLoading(false)
         }
 
     }
@@ -38,6 +47,7 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
         e.preventDefault();
 
         try {
+            setIsLoading(true)
             const response = await axios.post(`${BASE_URL}/accounts/login/`, {
                 email,
                 otp,
@@ -65,10 +75,12 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
 
         } catch (error) {
             console.error('Error:', error.message);
+        } finally {
+            setIsLoading(false)
         }
     }
 
-    return (
+    return isLoading ? <Loading /> : (
         <div>
             <form onSubmit={(e) => handleSubmit(e)}>
                 <label htmlFor="email">Email:</label>
@@ -112,6 +124,9 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
             )}
         </div>
     );
+
+
+
 }
 
 export default SignIn;

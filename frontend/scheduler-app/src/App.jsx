@@ -10,6 +10,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Authenticate from "./components/Authenticate";
 import Home from "./components/Home";
 import AdminPanel from "./components/AdminPanel";
+import Loading from "./components/Loading";
+
 
 
 
@@ -30,12 +32,14 @@ function App() {
       };
       let response;
       try {
+        setIsLoading(true)
         response = await axios.get(
           `${BASE_URL}/candidate/details/`,
           {
             headers,
           }
         );
+
         if (response.status === 200) {
 
           setIsAuthenticated(true);
@@ -52,9 +56,10 @@ function App() {
   }, [isAuthenticated, setIsAuthenticated, BASE_URL, setIsLoading]);
 
 
-  if (isLoading)
-    return (<p>Loadin....</p>
-    )
+  if (isLoading) return <Loading />
+
+
+
   return (
     <Router>
       <Routes>

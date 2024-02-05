@@ -76,7 +76,7 @@ const MyCalendar = () => {
 
                 selectable
             />
-            {isModalOpen && <AdminCalendarModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedEvent={selectedEvent} />}
+            {isModalOpen && <AdminCalendarModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} setAdminEvents={setAdminEvents} selectedEvent={selectedEvent} />}
             {/* {isNewSlotModal && <NewSlotModal isModalOpen={isNewSlotModal} setIsModalOpen={setIsNewSlotModal} />} */}
         </div>
     );

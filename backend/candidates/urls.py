@@ -9,4 +9,5 @@ urlpatterns = [
          name="candidate-details-update"),
     path('candidate-availability/', CandidateAvailabilityListCreateView.as_view(),
          name='candidate-availability-list-create'),
+
 ]

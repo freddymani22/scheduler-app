@@ -41,18 +41,16 @@ def generate_otp_view(request):
     # Generate a new OTP
     otp = str(random.randint(1000, 9999))
 
-    # Update the user's OTP field
     user.otp = otp
     user.save()
-
-    # Send the OTP to the user's email (you can customize this part)
-    # send_mail(
-    #     'Your OTP for authentication',
-    #     f'Your OTP is: {otp}',
-    #     'from@example.com',
-    #     [user.email],  # Assuming the user model has an 'email' field
-    #     fail_silently=False,
-    # )
+# send mail
+    send_mail(
+        'Your OTP for authentication',
+        f'Your OTP is: {otp}',
+        'SCHEDULER-APP',
+        [user.email],
+        fail_silently=False,
+    )
 
     return Response({'detail': 'OTP generated and sent successfully'}, status=status.HTTP_200_OK)
 
@@ -75,7 +73,6 @@ def login_view(request):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
 
-            # Generate access token
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             is_interview_admin = user.is_interview_admin
@@ -86,11 +83,3 @@ def login_view(request):
 
     elif request.method == 'GET':
         return Response({'message': 'This is a GET request'})
-
-
-@api_view(["GET"])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
-def home_view(request):
-    if request.method == 'GET':
-        return Response({"message": "Hello!"})
