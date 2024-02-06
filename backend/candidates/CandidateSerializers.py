@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Candidate, CandidateAvailability
+from accounts.models import CustomUser
 
 
 class CandidateAvailabilitySerializer(serializers.ModelSerializer):

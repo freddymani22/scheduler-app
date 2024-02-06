@@ -5,7 +5,12 @@ import axios from "axios";
 
 
 
+import { NavLink } from 'react-router-dom';
+
+
+
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
 
 function NavBar({ setIsAuthenticated, isAuthenticated, setIsInterivewAdmin, setUserData }) {
 
@@ -49,7 +54,7 @@ function NavBar({ setIsAuthenticated, isAuthenticated, setIsInterivewAdmin, setU
         <nav className={styles.nav}>
             <ul>
 
-                <li>schuduler</li>
+                <li><NavLink to='/'>Scheduler</NavLink></li>
                 {isAuthenticated && <li className={styles.logoutBtn} onClick={handleLogout}>Logout</li>}
             </ul>
 

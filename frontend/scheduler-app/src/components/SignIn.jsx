@@ -9,57 +9,62 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
     const [otp, setOtp] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isOtpGenerated, setIsOtpGenerated] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 
     const navigate = useNavigate();
 
-
-
-    async function handleGenerateOtp() {
-
-
-
-
-        try {
-            // Make an API call to send the email
-            setIsLoading(true)
-            const response = await axios.post(`${BASE_URL}/accounts/generate-otp/`, { email });
-
-
-            // Check if the email was successfully sent before setting isOtpGenerated to true
-            if (response.request.statusText === 'OK') {
-                setIsOtpGenerated(true);
-
-            } else {
-                // Handle the case where the email sending failed
-                console.error("Failed to send email");
-            }
-        } catch (error) {
-            console.error("Error sending email", error);
-        } finally {
-            setIsLoading(false)
-        }
-
-    }
-
-    async function handleSubmit(e) {
+    async function handleGenerateOtp(e) {
         e.preventDefault();
 
         try {
+            setIsLoading(true);
+
+            const response = await axios.post(`${BASE_URL}/accounts/generate-otp/`, { email });
+
+            // Check if the email was successfully sent before setting isOtpGenerated to true
+            if (response.status === 200) {
+                setIsOtpGenerated(true);
+                setErrorMessage('')
+            } else {
+                // Handle the case where the email sending failed
+                console.error("Failed to send email");
+                setErrorMessage("Failed to send email");
+            }
+        } catch (error) {
+            console.error("Error sending email", error);
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                setErrorMessage(error.response.data.detail);
+            } else if (error.request) {
+                // The request was made but no response was received
+                setErrorMessage("No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                setErrorMessage("An unexpected error occurred");
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+
+
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        let response
+        try {
             setIsLoading(true)
-            const response = await axios.post(`${BASE_URL}/accounts/login/`, {
+            response = await axios.post(`${BASE_URL}/accounts/login/`, {
                 email,
                 otp,
             });
-
-
             const jwtToken = response.data.access_token;
-
             localStorage.setItem('jwtToken', jwtToken);
-
-
 
             // setEmail('');
             // setOtp('');
@@ -76,6 +81,7 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
 
         } catch (error) {
             console.error('Error:', error.message);
+
         } finally {
             setIsLoading(false)
         }
@@ -95,8 +101,10 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
                     onChange={(e) => setEmail(e.target.value)}
                 />
 
+                {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+
                 {!isOtpGenerated && (
-                    <button type="button" onClick={handleGenerateOtp}>
+                    <button type="button" onClick={(e) => handleGenerateOtp(e)}>
                         Generate OTP
                     </button>
                 )}

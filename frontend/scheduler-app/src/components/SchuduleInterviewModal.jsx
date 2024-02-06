@@ -85,21 +85,22 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                         end: new Date(rest.end),
                     }));
 
-                    // Update the events state with the new data
+
                     setAdminEvents(formattedEvents);
+                    setIsModalOpen(false)
                 }
 
-                // Additional logic or feedback upon successful scheduling
+
 
             } catch (error) {
                 console.error('Error scheduling interview:', error);
-                // Handle error or provide user feedback
+
             }
         }
     };
 
 
-    // Handler for submitting date, start time, and end time
+
     const handleDateTimeSubmit = async (event) => {
         event.preventDefault();
 
@@ -110,14 +111,13 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                     Authorization: `Bearer ${token}`,
                 };
                 console.log(BASE_URL)
-                // Make a POST request to get the candidate and interviewer lists based on the selected date and time
+
                 const response = await axios.post(`${BASE_URL}/admin-panel/available-candidate/`, {
                     date: dateValue,
                     available_from: startTimeValue,
                     available_to: endTimeValue,
                 }, { headers });
 
-                // Set the candidate and interviewer lists, and mark datetime as selected
                 setAvailableCandidateList(response.data.candidates);
                 setAvailableInterviewersList(response.data.interviewers);
                 setIsDateTimeSelected(true);
@@ -128,7 +128,7 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
         }
     };
 
-    // JSX structure for the modal
+
     return (
         <>
             <div className={`${styles.modal} ${isModalOpen ? '' : styles.hidden}`}>

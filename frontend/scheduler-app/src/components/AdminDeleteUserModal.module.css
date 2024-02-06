@@ -62,7 +62,7 @@
 .modelFormBtn {
   margin-left: auto;
   margin-right: auto;
-  padding: 0.5rem 1rem;
+  padding: 1rem 2rem;
   border: none;
   background-color: var(--color-brand--2);
 
@@ -73,7 +73,6 @@
   cursor: pointer;
 }
 
-.title {
-  text-align: center;
-  font-weight: 600;
+.modelFormBtn:hover {
+  transform: scale(1.1);
 }

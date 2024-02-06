@@ -5,9 +5,10 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 
-from .admin_serializers import CandidateAvailabilitySerializer, CreateUserSerializer
+from .admin_serializers import CandidateAvailabilitySerializer, CreateUserSerializer, UserSerializer
 from candidates.models import CandidateAvailability
 from candidates.CandidateSerializers import CandidateSerializer
+from accounts.models import CustomUser
 
 
 class InterviewAdminPermission(permissions.BasePermission):
@@ -131,3 +132,21 @@ def create_user(request):
             return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ListUserAPIView(generics.ListAPIView):
+    permission_classes = [InterviewAdminPermission]
+
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return CustomUser.objects.exclude(email=self.request.user)
+
+
+class UserDeleteAPIView(generics.DestroyAPIView):
+    permission_classes = [InterviewAdminPermission]
+    serializer_class = UserSerializer
+    lookup_field = 'pk'
+
+    def get_queryset(self):
+        return CustomUser.objects.exclude(email=self.request.user)

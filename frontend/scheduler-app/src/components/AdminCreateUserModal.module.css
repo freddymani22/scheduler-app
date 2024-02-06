@@ -83,14 +83,12 @@
   justify-content: center;
 }
 
-/* Custom styles for the radio button container (optional) */
 .radioContainer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 }
 
-/* Custom styles for the label */
 .radioLabel {
   font-weight: bold;
   margin-left: auto;
@@ -99,7 +97,8 @@
 .inputField {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 input[type="radio"]:checked + label {
