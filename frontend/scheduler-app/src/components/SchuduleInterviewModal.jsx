@@ -70,7 +70,7 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                 };
 
                 // Make a POST request to schedule the interview
-                await axios.post(`${BASE_URL}/admin-panel/`, {
+                await axios.put(`${BASE_URL}/admin-panel/update-availability-title/`, {
                     candidate_availability_id: selectedCandidate,
                     interviewer_availability_id: selectedInterviewer,
                     interview_title: interviewTitle,

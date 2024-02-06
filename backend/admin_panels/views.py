@@ -5,8 +5,9 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 
-from .admin_serializers import CandidateAvailabilitySerializer
+from .admin_serializers import CandidateAvailabilitySerializer, CreateUserSerializer
 from candidates.models import CandidateAvailability
+from candidates.CandidateSerializers import CandidateSerializer
 
 
 class InterviewAdminPermission(permissions.BasePermission):
@@ -84,7 +85,8 @@ def filter_candidates_by_availability(request):
     return Response(response_data)
 
 
-@api_view(['POST'])
+@api_view(['PUT', 'PATCH'])
+@permission_classes([InterviewAdminPermission])
 def update_availability(request):
     # Extract data from the request
     candidate_availability_id_candidate = request.data.get(
@@ -114,3 +116,18 @@ def update_availability(request):
     candidate_availability_interviewer.save()
 
     return Response({'message': 'Interview titles updated successfully'}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([InterviewAdminPermission])
+def create_user(request):
+    if request.method == 'POST':
+        # Assuming 'first_name' and 'is_candidate' are present in the request data
+        data = request.data
+        serializer = CreateUserSerializer(data=data)
+
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
+import styles from './SignIn.module.css'
 
 function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
     const [email, setEmail] = useState("");
@@ -81,8 +82,9 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
     }
 
     return isLoading ? <Loading /> : (
-        <div>
-            <form onSubmit={(e) => handleSubmit(e)}>
+        <div className={styles.login}>
+            <p>Login</p>
+            <form onSubmit={(e) => handleSubmit(e)} className={styles.form}>
                 <label htmlFor="email">Email:</label>
                 <input
                     type="email"

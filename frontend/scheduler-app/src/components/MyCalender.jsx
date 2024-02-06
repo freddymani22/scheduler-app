@@ -42,7 +42,7 @@ const MyCalendar = () => {
 
     }
     return (
-        <div style={{ height: '500px' }} className={styles.myCalender}>
+        <div className={styles.myCalender}>
             <Calendar
                 onSelectEvent={(e) => handleSelectEvent(e)}
                 localizer={localizer}

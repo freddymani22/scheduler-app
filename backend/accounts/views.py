@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth import logout
 
 # Create your views here.
 
@@ -83,3 +84,13 @@ def login_view(request):
 
     elif request.method == 'GET':
         return Response({'message': 'This is a GET request'})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return Response({'detail': 'Successfully logged out'}, status=status.HTTP_200_OK)
+    else:
+        return Response({'detail': 'Invalid method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

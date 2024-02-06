@@ -1,13 +1,13 @@
 
 import SignIn from './SignIn'
-import SignUp from './SignUp'
+import styles from './Authenticate.module.css'
 
 
 
 
 function Authenticate({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
     return (
-        <div>
+        <div className={styles.authenticate}>
             {/* <SignUp /> */}
             <SignIn setIsAuthenticated={setIsAuthenticated} setIsInterivewAdmin={setIsInterivewAdmin} isInterivewAdmin={isInterivewAdmin} />
 

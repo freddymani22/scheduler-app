@@ -1,5 +1,8 @@
 .myCalender {
   flex-basis: 70%;
+  min-height: 88vh;
+  background-color: var(--color-light--2);
+  font-size: 1.5rem;
 }
 
 /* :global(.rbc-event, .rbc-event-content) {

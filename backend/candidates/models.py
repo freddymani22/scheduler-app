@@ -24,6 +24,9 @@ class Candidate(models.Model):
     first_name = models.CharField(max_length=30, default='first-name')
     last_name = models.CharField(max_length=30, default='last-name')
     skills = models.TextField(null=True, blank=True)
+    previous_company = models.CharField(max_length=200, null=True, blank=True)
+    is_candidate = models.BooleanField(default=True)
+    position = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
 

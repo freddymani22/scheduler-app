@@ -11,6 +11,8 @@ import Authenticate from "./components/Authenticate";
 import Home from "./components/Home";
 import AdminPanel from "./components/AdminPanel";
 import Loading from "./components/Loading";
+import NavBar from "./components/NavBar";
+import AdminProtectedRoute from "./components/AdminProtectedRoute";
 
 
 
@@ -61,40 +63,44 @@ function App() {
 
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            isInterivewAdmin ? (
-              <Navigate to="/admin" replace={true} />
-            ) : (
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Home userData={userData} setUserData={setUserData} />
-              </ProtectedRoute>
-            )
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            // <ProtectedRoute isAuthenticated={isAuthenticated}>
-            <AdminPanel />
-            // </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <Authenticate
-              setIsAuthenticated={setIsAuthenticated}
-              setIsInterivewAdmin={setIsInterivewAdmin}
-              isInterivewAdmin={isInterivewAdmin}
-            />
-          }
-        />
-      </Routes>
-    </Router >
+    <>
+
+      <Router>
+        <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setUserData={setUserData} setIsInterivewAdmin={setIsInterivewAdmin} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              isInterivewAdmin ? (
+                <Navigate to="/admin" replace={true} />
+              ) : (
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <Home userData={userData} setUserData={setUserData} />
+                </ProtectedRoute>
+              )
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AdminProtectedRoute isAuthenticated={isAuthenticated} isInterivewAdmin={isInterivewAdmin}>
+                <AdminPanel />
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Authenticate
+                setIsAuthenticated={setIsAuthenticated}
+                setIsInterivewAdmin={setIsInterivewAdmin}
+                isInterivewAdmin={isInterivewAdmin}
+              />
+            }
+          />
+        </Routes>
+      </Router >
+    </>
   );
 }
 

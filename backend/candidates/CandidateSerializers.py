@@ -33,7 +33,7 @@ class CandidateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidate
         fields = ['first_name',
-                  'last_name', 'skills', 'is_interview_admin']
+                  'last_name', 'skills', 'is_interview_admin', 'previous_company', 'is_candidate', 'position']
 
     def create(self, validated_data):
         # Automatically set the 'user' field to the authenticated user

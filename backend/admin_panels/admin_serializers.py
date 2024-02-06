@@ -2,6 +2,7 @@
 
 from rest_framework import serializers
 from candidates.models import CandidateAvailability
+from accounts.models import CustomUser
 
 
 class CandidateAvailabilitySerializer(serializers.ModelSerializer):
@@ -17,3 +18,9 @@ class CandidateAvailabilitySerializer(serializers.ModelSerializer):
 
     def get_candidate(self, obj):
         return obj.candidate.user.email
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'user_type']

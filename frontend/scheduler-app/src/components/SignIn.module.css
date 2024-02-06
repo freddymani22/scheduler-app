@@ -1,0 +1,47 @@
+.login {
+  display: flex;
+  justify-content: center;
+  border: none;
+  align-items: center;
+  border-radius: 2rem;
+  margin-top: 5rem;
+  color: var(--color-light--2);
+  padding: 2em;
+
+  font-weight: 300;
+  /* transition: all 1s ease-in; */
+  margin-bottom: auto;
+  flex-direction: column;
+  background-color: var(--color-dark--1);
+}
+
+button {
+  background-color: var(--color-brand--2);
+  color: var(--color-dark--0);
+  padding: 0.8rem 2rem;
+  border-radius: 7px;
+  border: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form button {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  transition: all 0.1s ease-in;
+}
+
+.form button:hover {
+  transform: scale(1.2);
+}
+
+.login p {
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 600;
+}

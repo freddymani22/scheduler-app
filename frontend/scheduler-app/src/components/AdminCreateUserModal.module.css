@@ -1,16 +1,17 @@
 .modal {
   position: absolute;
-  top: 42%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: var(--color-dark--2);
-  padding: 3em 1em;
+  padding: 2em 1em;
   border-radius: 1.4em;
   border: 2px solid var(--your-border-color-variable); /* Replace with the actual color variable */
   max-width: 100vh;
-  min-width: 50vh;
+  min-width: 30%;
   color: var(--color-light--2);
   z-index: 10;
+  font-size: 2rem;
 }
 
 .hidden {
@@ -61,7 +62,7 @@
 .modelFormBtn {
   margin-left: auto;
   margin-right: auto;
-  padding: 0.5rem 1rem;
+  padding: 1rem 2rem;
   border: none;
   background-color: var(--color-brand--2);
 
@@ -75,5 +76,32 @@
 .title {
   text-align: center;
   font-weight: 600;
-  font-size: 2.5rem;
+}
+
+.userType {
+  display: flex;
+  justify-content: center;
+}
+
+/* Custom styles for the radio button container (optional) */
+.radioContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom styles for the label */
+.radioLabel {
+  font-weight: bold;
+  margin-left: auto;
+}
+
+.inputField {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+input[type="radio"]:checked + label {
+  color: var(--color-brand--2);
 }

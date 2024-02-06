@@ -14,8 +14,8 @@ import axios from 'axios';
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 
-const MyCalendar = () => {
-    const [adminEvents, setAdminEvents] = useState([]);
+const MyCalendar = ({ setAdminEvents, adminEvents }) => {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isNewSlotModal, setIsNewSlotModal] = useState(false)
     const [selectedEvent, setSelectEvent] = useState('');
