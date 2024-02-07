@@ -4,11 +4,14 @@ from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
+from django.db.models import Q
 
 from .admin_serializers import CandidateAvailabilitySerializer, CreateUserSerializer, UserSerializer
 from candidates.models import CandidateAvailability
 from candidates.CandidateSerializers import CandidateSerializer
 from accounts.models import CustomUser
+from datetime import datetime, time
+from django.utils import timezone
 
 
 class InterviewAdminPermission(permissions.BasePermission):
@@ -46,19 +49,24 @@ def filter_candidates_by_availability(request):
         return Response({'error': 'Incomplete data provided'}, status=status.HTTP_400_BAD_REQUEST)
 
     # Parse date and time strings to create datetime objects
-    from datetime import datetime, time
     date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
     available_from_obj = datetime.strptime(available_from_str, '%H:%M').time()
     available_to_obj = datetime.strptime(available_to_str, '%H:%M').time()
 
     # Combine date and time to create datetime objects
-    available_from_datetime = datetime.combine(date_obj, available_from_obj)
-    available_to_datetime = datetime.combine(date_obj, available_to_obj)
+    available_from_datetime = timezone.make_aware(
+        datetime.combine(date_obj, available_from_obj),
+        timezone.get_current_timezone()
+    )
+    available_to_datetime = timezone.make_aware(
+        datetime.combine(date_obj, available_to_obj),
+        timezone.get_current_timezone()
+    )
 
-    # Filter candidates based on the provided time frame
     candidate_availability_objects = CandidateAvailability.objects.filter(
-        available_from__lte=available_from_datetime,
-        available_to__gte=available_to_datetime
+        Q(available_from__lt=available_to_datetime) &
+        Q(available_to__gt=available_from_datetime) &
+        Q(interview_title='Available')
     )
 
     candidates = []
@@ -68,7 +76,7 @@ def filter_candidates_by_availability(request):
         user_email = candidate_availability.candidate.user.email
         user_type = candidate_availability.candidate.user.user_type
 
-    # Check user type and organize accordingly
+        # Check user type and organize accordingly
         if user_type == 'candidate':
             candidates.append(
                 {'id': candidate_availability.id, 'email': user_email})
@@ -76,11 +84,10 @@ def filter_candidates_by_availability(request):
             interviewers.append(
                 {'id': candidate_availability.id, 'email': user_email})
 
-# Create the final response
+    # Create the final response
     response_data = {
         'candidates': candidates,
         'interviewers': interviewers,
-
     }
 
     return Response(response_data)

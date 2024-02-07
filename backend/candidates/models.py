@@ -38,4 +38,8 @@ def create_candidate(sender, instance, created, **kwargs):
 
     if created:
         print('check reciver')
-        Candidate.objects.create(user=instance)
+        print(instance.user_type)
+        if instance.user_type == 'interviewer':
+            Candidate.objects.create(user=instance, is_candidate=False)
+        else:
+            Candidate.objects.create(user=instance)

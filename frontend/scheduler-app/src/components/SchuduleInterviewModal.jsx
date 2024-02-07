@@ -110,7 +110,7 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                 const headers = {
                     Authorization: `Bearer ${token}`,
                 };
-                console.log(BASE_URL)
+
 
                 const response = await axios.post(`${BASE_URL}/admin-panel/available-candidate/`, {
                     date: dateValue,
@@ -118,8 +118,8 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                     available_to: endTimeValue,
                 }, { headers });
 
-                setAvailableCandidateList(response.data.candidates);
                 setAvailableInterviewersList(response.data.interviewers);
+                setAvailableCandidateList(response.data.candidates)
                 setIsDateTimeSelected(true);
 
             } catch (error) {
@@ -149,7 +149,7 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                 {isDateTimeSelected && (
                     <>
                         <label>Select Candidate:</label>
-                        <select value={selectedCandidate} onChange={handleCandidateChange}>
+                        <select value={selectedCandidate} onChange={handleCandidateChange} required>
                             <option value="" disabled>Select Candidate</option>
                             {availableCandidateList.map((candidate) => (
                                 <option key={candidate.id} value={candidate.id}>
@@ -159,7 +159,7 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                         </select>
 
                         <label>Select Interviewer:</label>
-                        <select value={selectedInterviewer} onChange={handleInterviewerChange}>
+                        <select value={selectedInterviewer} onChange={handleInterviewerChange} required>
                             <option value="" disabled>Select Interviewer</option>
                             {availableInterviewersList.map((interviewer) => (
                                 <option key={interviewer.id} value={interviewer.id}>
@@ -167,9 +167,10 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                                 </option>
                             ))}
                         </select>
-                        <label>INTERVIEW TITLE</label>
-                        <input type='text' value={interviewTitle} onChange={handleInterviewTitleChange} />
-                        <button onClick={handleInterviewSchedule}>Schedule Interview</button>
+                        {availableCandidateList.length === 0 || availableInterviewersList.length === 0 ? <p className={styles.error}>Either a cadidate or  an interviewer is unavailable in the given time slot</p> : <><label>INTERVIEW TITLE</label>
+                            <input type='text' required value={interviewTitle} onChange={handleInterviewTitleChange} /></>}
+
+                        {!(availableCandidateList.length === 0 || availableInterviewersList.length === 0) && <button onClick={handleInterviewSchedule}>Schedule Interview</button>}
                     </>
                 )}
             </div>

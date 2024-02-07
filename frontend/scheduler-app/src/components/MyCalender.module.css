@@ -9,3 +9,11 @@
   background-color: green;
   border: none;
 } */
+
+@media (max-width: 768px) {
+  .myCalender {
+    flex-basis: 90vh;
+    max-height: 50vh;
+    margin: 2rem;
+  }
+}

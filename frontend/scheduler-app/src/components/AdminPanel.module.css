@@ -1,4 +1,15 @@
 .adminPanel {
   display: flex;
-  position: relative;
+
+  background-color: var(--color-dark--1);
+}
+
+@media (max-width: 768px) {
+  .adminPanel {
+    flex-direction: column;
+  }
+
+  .sideBar {
+    flex-basis: auto; /* Adjust the width as needed */
+  }
 }

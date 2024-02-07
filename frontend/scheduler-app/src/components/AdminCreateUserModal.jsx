@@ -25,7 +25,7 @@ function AdminCreateUserModal({ isModalOpen, setIsModalOpen }) {
 
 
             };
-
+            console.log(userType)
             await Axios.post(`${BASE_URL}/admin-panel/create-user/`, data, { headers });
 
 

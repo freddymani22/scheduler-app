@@ -17,7 +17,7 @@ const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 const MyCalendar = ({ setAdminEvents, adminEvents }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isNewSlotModal, setIsNewSlotModal] = useState(false)
+
     const [selectedEvent, setSelectEvent] = useState('');
 
     const localizer = momentLocalizer(moment);
@@ -64,7 +64,7 @@ const MyCalendar = ({ setAdminEvents, adminEvents }) => {
 
     }
     return (
-        <div style={{ height: '500px' }} className={styles.myCalender}>
+        <div className={styles.myCalender}>
             <Calendar
                 onSelectEvent={(e) => handleSelectEvent(e)}
                 localizer={localizer}
