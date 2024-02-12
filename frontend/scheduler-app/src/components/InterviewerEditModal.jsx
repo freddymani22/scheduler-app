@@ -51,6 +51,7 @@ function InterviewerEditModal({ editModal, setEditModal, userData, setUserData }
                 <form className={styles.modelForm} onSubmit={(e) => { updateCandDetails(e) }}>
                     <label htmlFor="firstName">First Name:</label>
                     <input
+                        required
                         id="firstName"
                         className="input"
                         type="text"
@@ -61,6 +62,7 @@ function InterviewerEditModal({ editModal, setEditModal, userData, setUserData }
 
                     <label htmlFor="lastName">Last Name:</label>
                     <input
+                        required
                         id="lastName"
                         placeholder="Last Name"
                         className="input"
@@ -71,6 +73,7 @@ function InterviewerEditModal({ editModal, setEditModal, userData, setUserData }
 
                     <label htmlFor="previousCompany">Previous Company:</label>
                     <input
+                        required
                         id="previousCompany"
                         placeholder="Previous Company"
                         value={previousCompany}
@@ -80,6 +83,7 @@ function InterviewerEditModal({ editModal, setEditModal, userData, setUserData }
 
                     <label htmlFor="position">Position:</label>
                     <input
+                        required
                         id="position"
                         value={position}
                         type='text'

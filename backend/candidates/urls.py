@@ -1,13 +1,13 @@
 # urls.py
 from django.urls import path
-from .views import CandidateCreateView, CandidateUpdateView, CandidateAvailabilityListCreateView
+from .views import UserProfileCreateAPIView, UserProfileAPIView, UserAvailabilityListCreateView
 
 urlpatterns = [
-    path('create-details/', CandidateCreateView.as_view(),
-         name='candidate-details-create'),
-    path('details/', CandidateUpdateView.as_view(),
-         name="candidate-details-update"),
-    path('candidate-availability/', CandidateAvailabilityListCreateView.as_view(),
-         name='candidate-availability-list-create'),
+    path('create-details/', UserProfileCreateAPIView.as_view(),
+         name='user-details-create'),
+    path('details/', UserProfileAPIView.as_view(),
+         name="user-details-update"),
+    path('candidate-availability/', UserAvailabilityListCreateView.as_view(),
+         name='user-availability-list-create'),
 
 ]

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styles from './SideBarAdmin.module.css'
 import SchuduleInterviewModal from './SchuduleInterviewModal';
 import AdminCreateUserModal from './AdminCreateUserModal';
-import axios from 'axios';
+
 import AdminDeleteUserModal from './AdminDeleteUserModal';
 
 function SideBarAdmin({ setAdminEvents }) {

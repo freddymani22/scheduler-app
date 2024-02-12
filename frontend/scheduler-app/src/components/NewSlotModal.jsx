@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import styles from './NewSlotModal.module.css'
 import { useDate } from './DateContext';
 
@@ -62,6 +62,10 @@ function NewSlotModal({ isModalOpen, setIsModalOpen }) {
 
                     <label>From:</label>
                     <input type="time" value={fromTime} onChange={(e) => handleFromTime(e)} required />
+
+
+
+
 
                     <label>To:</label>
                     <input type="time" value={toTime} onChange={(e) => handleToTime(e)} required />

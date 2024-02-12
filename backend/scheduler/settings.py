@@ -42,7 +42,6 @@ INSTALLED_APPS = [
 
     # APPS
     "accounts",
-    "interviewers",
     "candidates",
     "admin_panels",
 

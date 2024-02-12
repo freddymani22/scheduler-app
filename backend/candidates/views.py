@@ -1,41 +1,41 @@
 
-from .models import CandidateAvailability
+from .models import UserAvailability
 from rest_framework.generics import ListCreateAPIView
 from rest_framework import generics
-from .models import Candidate
-from .CandidateSerializers import CandidateSerializer, CandidateAvailabilitySerializer
+from .models import UserProfile
+from .userserializers import UserProfileSerializer, UserAvailabilitySerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class CandidateCreateView(generics.CreateAPIView):
-    serializer_class = CandidateSerializer
+class UserProfileCreateAPIView(generics.CreateAPIView):
+    serializer_class = UserProfileSerializer
     permission_classes = {IsAuthenticated}
 
     def get_queryset(self):
 
         user = self.request.user
 
-        return Candidate.objects.filter(user=user)
+        return UserProfile.objects.filter(user=user)
 
 
-class CandidateUpdateView(APIView):
+class UserProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
         user = self.request.user
         try:
-            return Candidate.objects.get(user__email=user)
-        except Candidate.DoesNotExist:
+            return UserProfile.objects.get(user__email=user)
+        except UserProfile.DoesNotExist:
             return None
 
     def get(self, request, *args, **kwargs):
         candidate = self.get_object()
 
         if candidate is not None:
-            serializer = CandidateSerializer(candidate)
+            serializer = UserProfileSerializer(candidate)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -44,10 +44,12 @@ class CandidateUpdateView(APIView):
         candidate = self.get_object()
 
         if candidate is not None:
-            serializer = CandidateSerializer(candidate, data=request.data)
+            serializer = UserProfileSerializer(candidate, data=request.data)
             if serializer.is_valid():
+
                 serializer.save()
                 return Response(serializer.data)
+
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -62,12 +64,12 @@ class CandidateUpdateView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class CandidateAvailabilityListCreateView(ListCreateAPIView):
+class UserAvailabilityListCreateView(ListCreateAPIView):
 
-    serializer_class = CandidateAvailabilitySerializer
+    serializer_class = UserAvailabilitySerializer
 
     def get_queryset(self):
 
         user = self.request.user
 
-        return CandidateAvailability.objects.filter(candidate__user__email=user)
+        return UserAvailability.objects.filter(candidate__user__email=user)

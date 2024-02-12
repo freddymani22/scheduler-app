@@ -1,13 +1,10 @@
 .loader {
-  width: 4rem;
-  min-height: 4rem;
-  border: 0.6rem solid var(--color-brand--2);
+  border: 0.5rem solid var(--color-dark--1);
   border-left-color: transparent;
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner 0.8s infinite alternate;
   margin: auto 0;
-  margin: 30vh 7.5vw;
 }
 
 @keyframes spinner {

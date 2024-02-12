@@ -1,38 +1,38 @@
 from rest_framework import serializers
-from .models import Candidate, CandidateAvailability
+from .models import UserProfile, UserAvailability
 from accounts.models import CustomUser
 
 
-class CandidateAvailabilitySerializer(serializers.ModelSerializer):
+class UserAvailabilitySerializer(serializers.ModelSerializer):
 
     title = serializers.CharField(source='interview_title', required=False)
     start = serializers.DateTimeField(source='available_from')
     end = serializers.DateTimeField(source='available_to')
 
     class Meta:
-        model = CandidateAvailability
+        model = UserAvailability
         fields = ['title', 'start', 'end']
 
     def create(self, validated_data):
 
-        candidate_instance = Candidate.objects.get(
+        candidate_instance = UserProfile.objects.get(
             user__email=self.context['request'].user)
 
         validated_data['candidate'] = candidate_instance
 
-        candidate_availability = CandidateAvailability.objects.create(
+        candidate_availability = UserAvailability.objects.create(
             **validated_data)
 
         return candidate_availability
 
 
-class CandidateSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     # availabilities = CandidateAvailabilitySerializer(many=True, read_only=True)
     is_interview_admin = serializers.ReadOnlyField(
         source='user.is_interview_admin')
 
     class Meta:
-        model = Candidate
+        model = UserProfile
         fields = ['first_name',
                   'last_name', 'skills', 'is_interview_admin', 'previous_company', 'is_candidate', 'position']
 
@@ -47,6 +47,6 @@ class CandidateSerializer(serializers.ModelSerializer):
                 "User must have user_type 'candidate' to create a candidate.")
 
         # Create Candidate instance
-        candidate = Candidate.objects.create(**validated_data)
+        candidate = UserProfile.objects.create(**validated_data)
 
         return candidate

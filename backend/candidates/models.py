@@ -7,8 +7,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-class CandidateAvailability(models.Model):
-    candidate = models.ForeignKey('Candidate', on_delete=models.CASCADE)
+class UserAvailability(models.Model):
+    candidate = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
     interview_title = models.CharField(
         max_length=100, default='Available', blank=True)
     available_from = models.DateTimeField(default=timezone.now)
@@ -18,7 +18,7 @@ class CandidateAvailability(models.Model):
         return f"{self.candidate.user.email} {self.available_from}"
 
 
-class Candidate(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE, primary_key=True)
     first_name = models.CharField(max_length=30, default='first-name')
@@ -29,17 +29,17 @@ class Candidate(models.Model):
     position = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-
         return f"{self.user.email}"
 
 
 @receiver(post_save, sender=CustomUser)
-def create_candidate(sender, instance, created, **kwargs):
+def create_user_profile(sender, instance, created, **kwargs):
 
     if created:
-        print('check reciver')
-        print(instance.user_type)
+
         if instance.user_type == 'interviewer':
-            Candidate.objects.create(user=instance, is_candidate=False)
+            UserProfile.objects.create(user=instance, is_candidate=False)
+        elif instance.is_interview_admin:
+            UserProfile.objects.create(user=instance, is_candidate=False)
         else:
-            Candidate.objects.create(user=instance)
+            UserProfile.objects.create(user=instance)

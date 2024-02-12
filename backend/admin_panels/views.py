@@ -6,9 +6,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from django.db.models import Q
 
-from .admin_serializers import CandidateAvailabilitySerializer, CreateUserSerializer, UserSerializer
-from candidates.models import CandidateAvailability
-from candidates.CandidateSerializers import CandidateSerializer
+from .admin_serializers import UserAvailabilitySerializer, CreateUserSerializer, UserSerializer
+from candidates.models import UserAvailability
+from candidates.userserializers import UserProfileSerializer
 from accounts.models import CustomUser
 from datetime import datetime, time
 from django.utils import timezone
@@ -17,15 +17,16 @@ from django.utils import timezone
 class InterviewAdminPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
+        print(user.is_authenticated and user.is_interview_admin)
         return user.is_authenticated and user.is_interview_admin
 
 
-class CandidateAvailabilityListView(generics.ListAPIView):
-    serializer_class = CandidateAvailabilitySerializer
+class UserAvailabilityAPIListView(generics.ListAPIView):
+    serializer_class = UserAvailabilitySerializer
     permission_classes = [InterviewAdminPermission]
 
     def get_queryset(self):
-        return CandidateAvailability.objects.all()
+        return UserAvailability.objects.all()
 
     def list(self, request, *args, **kwargs):
         try:
@@ -38,8 +39,7 @@ class CandidateAvailabilityListView(generics.ListAPIView):
 
 @api_view(['POST'])
 @permission_classes([InterviewAdminPermission])
-def filter_candidates_by_availability(request):
-    # Your existing view logic here
+def filter_user_by_availability(request):
     date_str = request.data.get('date')
     available_from_str = request.data.get('available_from')
     available_to_str = request.data.get('available_to')
@@ -63,26 +63,28 @@ def filter_candidates_by_availability(request):
         timezone.get_current_timezone()
     )
 
-    candidate_availability_objects = CandidateAvailability.objects.filter(
-        Q(available_from__lt=available_to_datetime) &
-        Q(available_to__gt=available_from_datetime) &
-        Q(interview_title='Available')
+    user_availability_objects = UserAvailability.objects.filter(
+        Q(available_from__range=(available_from_datetime, available_to_datetime)) |
+        Q(available_to__range=(available_from_datetime, available_to_datetime)) |
+        Q(available_from__lte=available_from_datetime,
+          available_to__gte=available_to_datetime),
+        interview_title='Available'
     )
-
+    print(user_availability_objects)
     candidates = []
     interviewers = []
 
-    for candidate_availability in candidate_availability_objects:
-        user_email = candidate_availability.candidate.user.email
-        user_type = candidate_availability.candidate.user.user_type
+    for user_availability in user_availability_objects:
+        user_email = user_availability.candidate.user.email
+        user_type = user_availability.candidate.user.user_type
 
         # Check user type and organize accordingly
         if user_type == 'candidate':
             candidates.append(
-                {'id': candidate_availability.id, 'email': user_email})
+                {'id': user_availability.id, 'email': user_email})
         elif user_type == 'interviewer':
             interviewers.append(
-                {'id': candidate_availability.id, 'email': user_email})
+                {'id': user_availability.id, 'email': user_email})
 
     # Create the final response
     response_data = {
@@ -102,8 +104,6 @@ def update_availability(request):
     candidate_availability_id_interviewer = request.data.get(
         'interviewer_availability_id')
     interview_title = request.data.get('interview_title')
-    print(candidate_availability_id_candidate,
-          candidate_availability_id_interviewer, interview_title)
 
     # Check if all required data is provided
     if not (candidate_availability_id_candidate and candidate_availability_id_interviewer and interview_title):
@@ -111,9 +111,9 @@ def update_availability(request):
 
     # Get the CandidateAvailability instances
     candidate_availability_candidate = get_object_or_404(
-        CandidateAvailability, pk=candidate_availability_id_candidate, candidate__user__user_type='candidate')
+        UserAvailability, pk=candidate_availability_id_candidate, candidate__user__user_type='candidate')
     candidate_availability_interviewer = get_object_or_404(
-        CandidateAvailability, pk=candidate_availability_id_interviewer, candidate__user__user_type='interviewer')
+        UserAvailability, pk=candidate_availability_id_interviewer, candidate__user__user_type='interviewer')
 
     # Update the interview titles
     candidate_availability_candidate.interview_title = interview_title

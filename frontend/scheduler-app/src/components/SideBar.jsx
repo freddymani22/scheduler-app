@@ -10,7 +10,7 @@ import InterviewerEditModal from './InterviewerEditModal';
 function SideBar({ userData, setUserData }) {
     const [editModal, setEditModal] = useState(false);
 
-    console.log(userData)
+
     function handleEdit() {
         setEditModal((val) => !val);
     }

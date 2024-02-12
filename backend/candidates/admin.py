@@ -3,8 +3,8 @@ from django.contrib import admin
 # Register your models here.
 
 
-from .models import Candidate, CandidateAvailability
+from .models import UserProfile, UserAvailability
 
 
-admin.site.register(Candidate)
-admin.site.register(CandidateAvailability)
+admin.site.register(UserProfile)
+admin.site.register(UserAvailability)

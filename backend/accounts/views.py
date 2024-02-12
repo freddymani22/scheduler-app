@@ -46,7 +46,7 @@ def generate_otp_view(request):
     user.save()
 # send mail
     send_mail(
-        'Your OTP for authentication',
+        'Your OTP for SCHEDULER-APP authentication',
         f'Your OTP is: {otp}',
         'SCHEDULER-APP',
         [user.email],

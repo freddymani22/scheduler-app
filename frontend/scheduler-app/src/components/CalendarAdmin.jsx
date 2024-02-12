@@ -34,7 +34,7 @@ const MyCalendar = ({ setAdminEvents, adminEvents }) => {
                 if (response.status === 200) {
 
 
-                    const formattedEvents = response.data.map(({ id, candidate, ...rest }) => ({
+                    const formattedEvents = response.data.map(({ candidate, ...rest }) => ({
                         title: `${rest.title}-${candidate}`,
                         start: new Date(rest.start),
                         end: new Date(rest.end),
@@ -51,7 +51,7 @@ const MyCalendar = ({ setAdminEvents, adminEvents }) => {
         };
 
         fetchEvents();
-    }, []);
+    }, [setAdminEvents]);
 
 
 

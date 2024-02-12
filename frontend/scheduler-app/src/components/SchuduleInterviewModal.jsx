@@ -79,7 +79,7 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                 // Fetch updated events after scheduling
                 const response = await axios.get(`${BASE_URL}/admin-panel/`, { headers });
                 if (response.status === 200) {
-                    const formattedEvents = response.data.map(({ id, candidate, ...rest }) => ({
+                    const formattedEvents = response.data.map(({ candidate, ...rest }) => ({
                         title: `${rest.title}-${candidate}`,
                         start: new Date(rest.start),
                         end: new Date(rest.end),
@@ -110,7 +110,7 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                 const headers = {
                     Authorization: `Bearer ${token}`,
                 };
-
+                console.log(dateValue, startTimeValue, endTimeValue)
 
                 const response = await axios.post(`${BASE_URL}/admin-panel/available-candidate/`, {
                     date: dateValue,
@@ -138,11 +138,11 @@ const ScheduleInterviewModal = ({ isModalOpen, setIsModalOpen, setAdminEvents })
                 </button>
                 <form onSubmit={handleDateTimeSubmit}>
                     <label>Date:</label>
-                    <input type="date" onChange={handleDateChange} />
+                    <input type="date" onChange={(e) => handleDateChange(e)} />
                     <label>Start Time:</label>
-                    <input type="time" onChange={handleStartTimeChange} />
+                    <input type="time" onChange={(e) => handleStartTimeChange(e)} />
                     <label>End Time:</label>
-                    <input type="time" onChange={handleEndTimeChange} />
+                    <input type="time" onChange={(e) => handleEndTimeChange(e)} />
                     {!isDateTimeSelected && <button type="submit">Load Candidates</button>}
                 </form>
 

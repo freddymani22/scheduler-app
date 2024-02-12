@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 import styles from './SignIn.module.css'
 
+import BtnLoader from "./BtnLoader"
+
 function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
@@ -28,6 +30,7 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
             if (response.status === 200) {
                 setIsOtpGenerated(true);
                 setErrorMessage('')
+
             } else {
                 // Handle the case where the email sending failed
                 console.error("Failed to send email");
@@ -66,6 +69,7 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
             const jwtToken = response.data.access_token;
             localStorage.setItem('jwtToken', jwtToken);
 
+
             // setEmail('');
             // setOtp('');
             await setIsAuthenticated(true)
@@ -80,60 +84,63 @@ function SignIn({ setIsAuthenticated, setIsInterivewAdmin, isInterivewAdmin }) {
 
 
         } catch (error) {
-            console.error('Error:', error.message);
+
+            setErrorMessage(error.response.data.detail);
+            setOtp('');
+
 
         } finally {
             setIsLoading(false)
         }
     }
 
-    return isLoading ? <Loading /> : (
-        <div className={styles.login}>
-            <p>Login</p>
-            <form onSubmit={(e) => handleSubmit(e)} className={styles.form}>
-                <label htmlFor="email">Email:</label>
-                <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    placeholder="Email"
-                    required
-                    onChange={(e) => setEmail(e.target.value)}
-                />
 
-                {errorMessage && <p className={styles.error}>{errorMessage}</p>}
-
-                {!isOtpGenerated && (
-                    <button type="button" onClick={(e) => handleGenerateOtp(e)}>
-                        Generate OTP
-                    </button>
-                )}
-
-                {isOtpGenerated && (
-                    <>
-                        <label htmlFor="otp">OTP:</label>
-                        <input
-                            type="number"
-                            id="otp"
-                            placeholder="OTP"
-                            value={otp}
-                            required
-                            onChange={(e) => setOtp(e.target.value)}
-                        />
-                        <button type="submit">Sign In</button>
+    return <div className={styles.login}>
+        <p>Login</p>
+        <form onSubmit={(e) => handleSubmit(e)} className={styles.form}>
+            <label htmlFor="email">Email:</label>
+            <input
+                type="email"
+                id="email"
+                value={email}
+                placeholder="Email"
+                required
+                onChange={(e) => setEmail(e.target.value)}
+            />
 
 
-                    </>
-                )}
 
-            </form>
+            {!isOtpGenerated && (
+                <button type="button" className={styles.otpBtn} onClick={(e) => handleGenerateOtp(e)}>
+                    {isLoading ? <BtnLoader /> : "GENERATE OTP"}
+                </button>
+            )}
 
             {isOtpGenerated && (
-                <button onClick={() => setIsOtpGenerated((val) => !val)}>resend otp</button>
+                <>
+                    <label htmlFor="otp">OTP:</label>
+                    <input
+                        type="number"
+                        id="otp"
+                        placeholder="OTP"
+                        value={otp}
+                        required
+                        onChange={(e) => setOtp(e.target.value)}
+                    />
+                    {isLoading ? <BtnLoader /> : <button type="submit" className="btn">Sign In</button>}
+                    {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 
+                </>
             )}
-        </div>
-    );
+
+        </form>
+
+        {isOtpGenerated &&
+            (isLoading ? <BtnLoader /> : <button className={`${styles.resendOtpBtn} btn`} onClick={() => setIsOtpGenerated((val) => !val)}>resend otp</button>)
+
+        }
+    </div>
+
 
 
 
